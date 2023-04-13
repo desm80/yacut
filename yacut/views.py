@@ -1,7 +1,7 @@
 import random
 from urllib.parse import urljoin
 
-from flask import render_template, redirect, url_for, session, request, flash
+from flask import render_template, redirect, abort
 
 from yacut import app, db
 from yacut.forms import URLMapForm
@@ -34,4 +34,12 @@ def yacut_view():
         form.custom_id.data = ''
         return render_template('yacut.html', form=form, message=message)
     return render_template('yacut.html', form=form)
+
+
+@app.route('/<string:short_id>')
+def opinion_view(short_id):
+    url = URLMap.query.filter_by(short=short_id).first()
+    if url is not None:
+        return redirect(url.original)
+    abort(404)
 
