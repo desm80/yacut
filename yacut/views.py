@@ -1,12 +1,11 @@
 import random
-from urllib.parse import urljoin
 
 from flask import abort, redirect, render_template
 
 from yacut import app, db
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
-from yacut.settings import BASE_URL, LETTERS_NUMBERS, SHORT_LINK_LENGTH
+from yacut.settings import LETTERS_NUMBERS, SHORT_LINK_LENGTH
 
 
 def get_unique_short_id():
@@ -34,7 +33,6 @@ def yacut_view():
         db.session.add(urlmap)
         db.session.commit()
 
-        # message = BASE_URL + form.custom_id.data
         message = "http://localhost/" + form.custom_id.data
         form.custom_id.data = ''
         return render_template('yacut.html', form=form, message=message)

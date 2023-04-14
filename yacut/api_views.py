@@ -19,15 +19,14 @@ def create_id():
     for key in data.keys():
         if key not in ['url', 'custom_id']:
             raise InvalidAPIUsage('Неверный запрос', 400)
-    if ('custom_id' not in data or data['custom_id'] == ''
-            or data['custom_id'] is None):
+    if ('custom_id' not in data or data['custom_id'] == '' or
+            data['custom_id'] is None):
         data['custom_id'] = get_unique_short_id()
     if len(data['custom_id']) > 16 or not re.match(r'^[a-zA-Z0-9]*\Z',
                                                    data['custom_id']):
         raise InvalidAPIUsage(
             'Указано недопустимое имя для короткой ссылки', 400
         )
-
     if URLMap.query.filter_by(short=data['custom_id']).first() is not None:
         raise InvalidAPIUsage(f"Имя \"{data['custom_id']}\" уже занято.", 400)
     url = URLMap()

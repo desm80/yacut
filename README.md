@@ -1,7 +1,18 @@
+# Проект YACUT
+
+Сервис создания и хранения коротких ссылок на страницы в интернете.
+
+## Стек технологий:
+* Python
+* Flask
+* SQLAlchemy
+* Jinja2
+
+
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone 
+git clone git@github.com:desm80/yacut.git
 ```
 
 ```
@@ -35,3 +46,6 @@ python3 -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+
+### Автор
+Смирнов Денис, кагорта 14+
