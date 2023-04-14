@@ -1,12 +1,12 @@
 import random
 from urllib.parse import urljoin
 
-from flask import render_template, redirect, abort
+from flask import abort, redirect, render_template
 
 from yacut import app, db
 from yacut.forms import URLMapForm
 from yacut.models import URLMap
-from yacut.settings import BASE_URL, SHORT_LINK_LENGTH, LETTERS_NUMBERS
+from yacut.settings import BASE_URL, LETTERS_NUMBERS, SHORT_LINK_LENGTH
 
 
 def get_unique_short_id():
@@ -22,15 +22,20 @@ def get_unique_short_id():
 def yacut_view():
     form = URLMapForm()
     if form.validate_on_submit():
-        if form.custom_id.data == '':
+        if form.custom_id.data == '' or form.custom_id.data is None:
             form.custom_id.data = get_unique_short_id()
+        if URLMap.query.filter_by(
+                short=form.custom_id.data).first() is not None:
+            return render_template('yacut.html', form=form, message=f'Имя {form.custom_id.data} уже занято!')
         urlmap = URLMap(
             original=form.original_link.data,
             short=form.custom_id.data,
         )
         db.session.add(urlmap)
         db.session.commit()
-        message = urljoin(BASE_URL, form.custom_id.data)
+
+        # message = BASE_URL + form.custom_id.data
+        message = "http://localhost/" + form.custom_id.data
         form.custom_id.data = ''
         return render_template('yacut.html', form=form, message=message)
     return render_template('yacut.html', form=form)
@@ -42,4 +47,3 @@ def opinion_view(short_id):
     if url is not None:
         return redirect(url.original)
     abort(404)
-

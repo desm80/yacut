@@ -2,6 +2,11 @@ from datetime import datetime
 
 from yacut import db
 
+API_NAMES = {
+    'url': 'original',
+    'custom_id': 'short',
+}
+
 
 class URLMap(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,20 +14,18 @@ class URLMap(db.Model):
     short = db.Column(db.String(16), unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
-    # Вот он — новый метод:
-    def to_dict(self):
+    def to_dict_create(self):
         return dict(
-            id=self.id,
-            original=self.original,
-            short=self.short,
-            timestamp=self.timestamp,
+            url=self.original,
+            short_link='http://localhost/' + self.short,
+        )
+
+    def to_dict_get(self):
+        return dict(
+            url=self.original,
         )
 
     def from_dict(self, data):
-        # Для каждого поля модели, которое можно заполнить...
-        for field in ['original', 'short']:
-            # ...выполняется проверка: есть ли ключ с таким же именем в словаре
+        for field in ['url', 'custom_id']:
             if field in data:
-                # Если есть — добавляем значение из словаря
-                # в соответствующее поле объекта модели:
-                setattr(self, field, data[field])
+                setattr(self, API_NAMES[field], data[field])
