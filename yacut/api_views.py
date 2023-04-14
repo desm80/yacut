@@ -10,6 +10,10 @@ from yacut.views import get_unique_short_id
 
 @app.route('/api/id/', methods=['POST'])
 def create_id():
+    """
+    Разработка ендпоинта для валидации входящих данных и сохранения в базу
+    короткой ссылки.
+    """
     data = request.get_json()
     if data is None:
         raise InvalidAPIUsage('Отсутствует тело запроса', 400)
@@ -38,6 +42,9 @@ def create_id():
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_url(short_id):
+    """
+    Эндпоинт для получения полной ссылки.
+    """
     url = URLMap.query.filter_by(short=short_id).first()
     if url is not None:
         return jsonify(url.to_dict_get())

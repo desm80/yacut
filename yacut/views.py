@@ -9,6 +9,9 @@ from yacut.settings import LETTERS_NUMBERS, SHORT_LINK_LENGTH
 
 
 def get_unique_short_id():
+    """
+    Создание уникальной короткой ссылки.
+    """
     short_id = ''
     for i in range(int(SHORT_LINK_LENGTH)):
         short_id += random.choice(list(LETTERS_NUMBERS))
@@ -19,6 +22,9 @@ def get_unique_short_id():
 
 @app.route('/', methods=['GET', 'POST'])
 def yacut_view():
+    """
+    Рендеринг формы и обработка запроса на сохранение короткой ссылки в БД.
+    """
     form = URLMapForm()
     if form.validate_on_submit():
         if form.custom_id.data == '' or form.custom_id.data is None:
@@ -41,6 +47,9 @@ def yacut_view():
 
 @app.route('/<string:short_id>')
 def opinion_view(short_id):
+    """
+    Функция переадресации по короткой ссылке на исходную страницу.
+    """
     url = URLMap.query.filter_by(short=short_id).first()
     if url is not None:
         return redirect(url.original)
