@@ -4,6 +4,9 @@ from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
 
 class URLMapForm(FlaskForm):
+    """
+    Форма для шаблона.
+    """
     original_link = URLField(
         'Длинная ссылка',
         validators=[DataRequired(message='Обязательное поле'),

@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import url_for
+
 from yacut import db
 
 API_NAMES = {
@@ -23,7 +25,7 @@ class URLMap(db.Model):
         """
         return dict(
             url=self.original,
-            short_link='http://localhost/' + self.short,
+            short_link=url_for('yacut_view', _external=True) + self.short,
         )
 
     def to_dict_get(self):

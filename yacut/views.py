@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from flask import abort, redirect, render_template
+from flask import abort, redirect, render_template, url_for
 
 from yacut import app, db
 from yacut.forms import URLMapForm
@@ -27,7 +27,8 @@ def yacut_view():
         )
         db.session.add(urlmap)
         db.session.commit()
-        message = "http://localhost/" + short_id
+        # message = "http://localhost/" + short_id
+        message = url_for('yacut_view', _external=True) + short_id
         form.custom_id.data = ''
         return render_template('yacut.html', form=form, message=message)
     return render_template('yacut.html', form=form)
